@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Crypt = require("bcryptjs");
+const JWT = require("jsonwebtoken");
+require("dotenv").config();
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -20,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide password"],
-    minlength: 6,
+    minlength: 5,
   },
 });
 
@@ -28,5 +30,13 @@ UserSchema.pre("save", async function () {
   const salt = await Crypt.genSalt(10);
   this.password = await Crypt.hash(this.password, salt);
 });
+
+UserSchema.methods.createJWT = function () {
+  return JWT.sign(
+    { userId: this._id, name: this.name },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_VALIDITY }
+  );
+};
 
 module.exports = mongoose.model("User", UserSchema);
