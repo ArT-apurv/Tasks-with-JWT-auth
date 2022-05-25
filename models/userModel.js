@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Crypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
+const Crypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
 
 const UserSchema = new mongoose.Schema({
@@ -37,6 +38,11 @@ UserSchema.methods.createJWT = function () {
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_VALIDITY }
   );
+};
+
+UserSchema.methods.comparePassword = async function (userPassword) {
+  const isMatching = await Crypt.compare(userPassword, this.password);
+  return isMatching;
 };
 
 module.exports = mongoose.model("User", UserSchema);
