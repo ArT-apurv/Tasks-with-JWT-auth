@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Crypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
-const Crypt = require("bcryptjs/dist/bcrypt");
 require("dotenv").config();
 
 const UserSchema = new mongoose.Schema({

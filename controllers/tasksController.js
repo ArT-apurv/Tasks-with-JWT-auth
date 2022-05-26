@@ -2,25 +2,6 @@ const JWT = require("jsonwebtoken");
 require("dotenv").config();
 const Task = require("../models/taskModels");
 
-const login = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    console.log(username, password);
-    if (!username || !password) {
-      res.status(400).json({ msg: "Please provide username and password" });
-    } else {
-      const id = new Date().getDate();
-      const token = JWT.sign({ id, username }, process.env.JWT_SECRET, {
-        expiresIn: "30d",
-      });
-
-      res.status(200).json({ msg: "user created", token });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const getAllTasks = async (req, res) => {
   try {
     const task = await Task.find({});
@@ -83,7 +64,6 @@ const updateTask = async (req, res) => {
 };
 
 module.exports = {
-  login,
   getTask,
   getAllTasks,
   updateTask,
